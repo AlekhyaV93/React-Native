@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
-import { Text, ScrollView, FlatList} from 'react-native';
+import { Text, ScrollView, FlatList } from 'react-native';
 import { Card, ListItem } from 'react-native-elements';
-import { PARTNERS } from '../shared/partners.js';
+import { connect } from 'react-redux';
+import { baseUrl } from '../shared/baseUrl'
+import { partners } from '../redux/partners';
 
+const mapStateToProps = (state) => {
+    return {
+        partners: state.partners
+    };
+}
 //creating mission component 
 function Mission() {
     return (
@@ -21,7 +28,7 @@ function renderPartner({ item }) {
     return (
         <ListItem title={item.name}
             subtitle={item.description}
-            leftAvatar={{ source: require('./images/bootstrap-logo.png') }}
+            leftAvatar={{ source: { uri: baseUrl + item.image } }}
         />
     )
 }
@@ -30,12 +37,7 @@ function renderPartner({ item }) {
 //FlatList is react-Native elememnt to render list of data, the keyExtractor prop of Flatlist is for setting unique id for each item in the list(as we did for react)
 //also used card component of react-native-elements
 class About extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            partners: PARTNERS
-        }
-    }
+
     static navigationOptions = {
         title: 'About Us'
     }
@@ -44,14 +46,14 @@ class About extends Component {
             <ScrollView>
                 <Mission />
                 <Card title="Community Partners">
-                <FlatList data={this.state.partners}
-                keyExtractor={item=>item.id.toString()}
-                renderItem={renderPartner}
-                /> 
+                    <FlatList data={this.props.partners.partners}
+                        keyExtractor={item => item.id.toString()}
+                        renderItem={renderPartner}
+                    />
                 </Card>
             </ScrollView>
         )
     }
 }
 //exporting About as default
-export default About
+export default connect(mapStateToProps)(About);
