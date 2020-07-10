@@ -141,3 +141,14 @@ export const addPartners = partners => ({
     type: ActionTypes.ADD_PARTNERS,
     payload: partners
 });
+
+export const postFavourite = (campsiteId) => dispatch => {
+    setTimeout(() => {
+        dispatch(addFavourite(campsiteId))
+    },2000)
+}
+
+export const addFavourite = (campsiteId) => ({
+    type : ActionTypes.ADD_FAVOURITE,
+    payload : campsiteId
+})

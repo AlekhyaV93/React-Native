@@ -2,15 +2,22 @@ import React, { Component } from 'react';
 import { Text, View, ScrollView, FlatList } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { baseUrl } from '../shared/baseUrl'
+import { baseUrl } from '../shared/baseUrl';
+import { postFavourite } from '../redux/ActionCreators'
+import { favourite } from '../redux/favourite';
 
 
 const mapStateToProps = (state) => {
     return {
         campsites: state.campsites,
-        comments: state.comments
+        comments: state.comments,
+        favourite: state.favourite
     };
 }
+const mapDispatchToProps = {   
+        postFavourite : campsiteId => postFavourite(campsiteId)
+}
+
 function RenderCampsite(props) {
     const { campsite } = props
     if (campsite) {
@@ -59,19 +66,12 @@ function RenderComments({ comments }) {
 
 class CampsiteInfo extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            favourite: false
-        };
-    }
-
     static navigationOptions = {
         title: 'Campsite Information'
     };
 
-    onMarkFavourite = () => {
-        this.setState({ favourite: true })
+    onMarkFavourite = (campsiteId) => {
+        this.props.postFavourite(campsiteId);
     }
 
     render() {
@@ -80,11 +80,11 @@ class CampsiteInfo extends Component {
         const comments = this.props.comments.comments.filter(com => com.campsiteId === campsiteId);
         return (
             <ScrollView>
-                <RenderCampsite campsite={campsite} favourite={this.state.favourite} onMarkFavourite={() => this.onMarkFavourite()} />
+                <RenderCampsite campsite={campsite} favourite={this.props.favourite.includes(campsiteId)} onMarkFavourite={() => this.onMarkFavourite(campsiteId)} />
                 <RenderComments comments={comments} />
             </ScrollView>
         );
     }
 }
 
-export default connect(mapStateToProps)(CampsiteInfo);
+export default connect(mapStateToProps,mapDispatchToProps)(CampsiteInfo);
