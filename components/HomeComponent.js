@@ -51,11 +51,11 @@ class Home extends Component {
         return (
             <ScrollView>
                 <RenderItem
-                    item={this.props.campsites.campsites.filter(campsite => campsite.featured)[0]} />
+                    item={this.props.campsites.campsites.filter(campsite => campsite.featured)[0]} errMess={this.props.campsites.errMess} isLoading={this.props.campsites.isLoading} />
                 <RenderItem
-                    item={this.props.promotions.promotions.filter(promotion => promotion.featured)[0]} />
+                    item={this.props.promotions.promotions.filter(promotion => promotion.featured)[0]} errMess={this.props.promotions.errMess} isLoading={this.props.promotions.isLoading} />
                 <RenderItem
-                    item={this.props.partners.partners.filter(partner => partner.featured)[0]} />
+                    item={this.props.partners.partners.filter(partner => partner.featured)[0]} errMess={this.props.partners.errMess} isLoading={this.props.partners.isLoading}/>
             </ScrollView>
         );
     }
