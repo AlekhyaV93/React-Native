@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { Card } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { baseUrl } from '../shared/baseUrl'
-
+import { baseUrl } from '../shared/baseUrl';
+import Loading from './LoadingComponent';
 
 const mapStateToProps = (state) => {
     return {
@@ -12,7 +12,19 @@ const mapStateToProps = (state) => {
         partners: state.partners
     };
 }
-function RenderItem({ item }) {
+function RenderItem(prop) {
+    const {item} = prop
+    if(prop.isLoading)
+    {
+        return <Loading />
+    }
+    if(prop.errMess){
+        return(
+            <View>
+                <Text>{prop.errMess}</Text>
+            </View>
+        )
+    }
     if (item) {
         return (
             <Card
@@ -33,8 +45,8 @@ class Home extends Component {
     static navigationOptions = {
         title: 'Home'
     }
-
     render() {
+       
         //FlatList or ScrollView can be used for veiwing a list of items. The difference is that Flatlist uses LazyLoading.
         return (
             <ScrollView>

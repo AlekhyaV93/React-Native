@@ -4,6 +4,7 @@ import { Card, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl'
 import { partners } from '../redux/partners';
+import Loading from './LoadingComponent';
 
 const mapStateToProps = (state) => {
     return {
@@ -37,11 +38,30 @@ function renderPartner({ item }) {
 //FlatList is react-Native elememnt to render list of data, the keyExtractor prop of Flatlist is for setting unique id for each item in the list(as we did for react)
 //also used card component of react-native-elements
 class About extends Component {
-
     static navigationOptions = {
         title: 'About Us'
     }
     render() {
+        if (this.props.partners.isLoading) {
+            return (
+                <ScrollView>
+                    <Mission />
+                    <Card title="Community Partners">
+                        <Loading />
+                    </Card>
+                </ScrollView>
+            )
+        }
+        if (this.props.partners.errMess) {
+            return (
+                <ScrollView>
+                    <Mission />
+                    <Card title="Community Partners">
+                        <Text>{this.props.partners.errMess}</Text>
+                    </Card>
+                </ScrollView>
+            )
+        }
         return (
             <ScrollView>
                 <Mission />
