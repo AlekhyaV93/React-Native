@@ -1,6 +1,7 @@
 import * as ActionTypes from './ActionTypes';
 import { baseUrl } from '../shared/baseUrl';
 
+//redux thunked function that dispatches action creator functions after api call
 export const fetchComments = () => dispatch => {
     return fetch(baseUrl + 'comments')
         .then(response => {
@@ -16,20 +17,42 @@ export const fetchComments = () => dispatch => {
                 const errMess = new Error(error.message);
                 throw errMess;
             })
+        //converting obtained response to javascript object
         .then(response => response.json())
         .then(comments => dispatch(addComments(comments)))
         .catch(error => dispatch(commentsFailed(error.message)));
 };
 
+//non thunked action creator function thats called when an error occurs during api call to fetch comments data,
+//it sets the action object with type and respective error message in the payload property
 export const commentsFailed = errMess => ({
     type: ActionTypes.COMMENTS_FAILED,
     payload: errMess
 });
-
+//action creator function to create action when api call was successful.
 export const addComments = (comments) => ({
     type: ActionTypes.ADD_COMMENTS,
     payload: comments
 });
+//redux thunked function that dispatches action creator function to add comment
+export const postComment = (campsiteId, rating, author, text) => dispatch => {
+    const newComment = {
+        campsiteId,
+        rating,
+        author,
+        text,
+        date: new Date().toISOString()
+    };
+
+    setTimeout(() => {
+        dispatch(addComment(newComment))
+    }, 2000)
+}
+//action creator function to add comment 
+export const addComment = (comment) => ({
+    type: ActionTypes.ADD_COMMENT,
+    payload: comment
+})
 
 export const fetchCampsites = () => dispatch => {
 
