@@ -1,5 +1,7 @@
 import * as ActionTypes from './ActionTypes';
 
+//campsite reducer function that takes initial state and action as input 
+//here the state properties are set based on the action
 export const comments = (state = { errMess: null, comments: [] }, action) => {
     switch (action.type) {
         case ActionTypes.ADD_COMMENTS:

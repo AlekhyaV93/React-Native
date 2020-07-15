@@ -7,6 +7,7 @@ import { createStackNavigator, createDrawerNavigator, DrawerItems } from 'react-
 import About from './AboutComponent';
 import Contact from './ContactComponent';
 import Reservation from './ReaservationComponent';
+import Favourite from './FavouriteComponent';
 import { Icon } from 'react-native-elements';
 import SafeAreaView from 'react-native-safe-area-view';
 import { connect } from 'react-redux';
@@ -118,7 +119,7 @@ const ContactNavigator = createStackNavigator(
         })
     }
 );
-
+//creating stack navigator for Reservation component
 const ReservationNavigator = createStackNavigator(
     {
         Reservation: { screen: Reservation }
@@ -127,6 +128,29 @@ const ReservationNavigator = createStackNavigator(
         navigationOptions: ({ navigation }) => ({
             headerLeft: <Icon
                 name="tree"
+                type="font-awesome"
+                iconStyle={styles.stackIcon}
+                onPress={() => navigation.toggleDrawer()}
+            />,
+            headerStyle: {
+                backgroundColor: '#5637DD'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                color: '#fff'
+            }
+        })
+    }
+);
+
+const FavouriteNavigator = createStackNavigator(
+    {
+        Favourite: { screen: Favourite }
+    },
+    {
+        navigationOptions: ({ navigation }) => ({
+            headerLeft: <Icon
+                name="heart"
                 type="font-awesome"
                 iconStyle={styles.stackIcon}
                 onPress={() => navigation.toggleDrawer()}
@@ -182,6 +206,20 @@ const MainNavigator = createDrawerNavigator(
                 drawerIcon: ({ tintColor }) => (
                     <Icon
                         name='list'
+                        type='font-awesome'
+                        size={24}
+                        color={tintColor}
+                    />
+                )
+            }
+        },
+        Favourite: {
+            screen: FavouriteNavigator,
+            navigationOptions: {
+                drawerLabel: 'My Favourites',
+                drawerIcon: ({ tintColor }) => (
+                    <Icon
+                        name='heart'
                         type='font-awesome'
                         size={24}
                         color={tintColor}

@@ -6,7 +6,7 @@ import { baseUrl } from '../shared/baseUrl';
 import { postFavourite, postComment } from '../redux/ActionCreators'
 import { favourite } from '../redux/favourite';
 
-
+//mapStateToProps function is called whenever the state changes/updates. It maps redux store state as props to the connected component(here campsiteInfo component)
 const mapStateToProps = (state) => {
     return {
         campsites: state.campsites,
@@ -14,12 +14,14 @@ const mapStateToProps = (state) => {
         favourite: state.favourite
     };
 }
+
+//function maps the redux store dispatch functions as props to the connected component 
 const mapDispatchToProps = {
     postFavourite: campsiteId => postFavourite(campsiteId),
     postComment: (campsiteId, rating, author, text) => postComment(campsiteId, rating, author, text)
 }
 
-
+//functional component to render selected campsite
 function RenderCampsite(props) {
     const { campsite } = props
     if (campsite) {
@@ -57,6 +59,7 @@ function RenderCampsite(props) {
     return <View />;
 }
 
+//functional component to render comments for the selected campsite
 function RenderComments({ comments }) {
 
     const renderCommentItem = ({ item }) => {
@@ -82,6 +85,7 @@ function RenderComments({ comments }) {
     )
 }
 
+//the main component where the above defined two components are rendered
 class CampsiteInfo extends Component {
 
     constructor(props) {
@@ -93,28 +97,34 @@ class CampsiteInfo extends Component {
             comment: ''
         }
     }
+
     static navigationOptions = {
         title: 'Campsite Information'
     };
 
+    //event handler thats called on making favourite 
     onMarkFavourite = (campsiteId) => {
         this.props.postFavourite(campsiteId);
     }
 
+    //function to toggle modal appearance
     toggleModal() {
         this.setState({
             show: !this.state.show
         })
     }
 
+    //event handler thats calls toggle modal fn.
     onShowModal() {
         this.toggleModal();
     }
 
+    //event handler thats called when submit a new comment from the modal, it takes campsiteId, rating, author, text as input and calls postComment fn.
     handleComment = (campsiteId, rating, author, text) => {
         this.props.postComment(campsiteId, rating, author, text);   
     }
 
+    //function to reset state property values
     resetForm() {
         this.setState({
             show: false,
@@ -184,6 +194,7 @@ class CampsiteInfo extends Component {
     }
 }
 
+//custom styles declaration
 const styles = StyleSheet.create({
     cardRow: {
         alignItems: 'center',
@@ -202,4 +213,5 @@ const styles = StyleSheet.create({
     }
 })
 
+//connecting CampsiteInfo component to the redux store
 export default connect(mapStateToProps, mapDispatchToProps)(CampsiteInfo);
