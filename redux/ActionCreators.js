@@ -192,3 +192,8 @@ export const addFavourite = (campsiteId) => ({
     type: ActionTypes.ADD_FAVOURITE,
     payload: campsiteId
 })
+
+export const deleteFavourite = (campsiteId) => ({
+    type:ActionTypes.DELETE_FAVOURITE,
+    payload: campsiteId
+})

@@ -5,6 +5,8 @@ import { favourite } from '../redux/favourite';
 import { Loading } from './LoadingComponent';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
+import { deleteFavourite } from '../redux/ActionCreators';
+import Swipeout from 'react-native-swipeout'
 
 const mapStateToProps = (state) => {
     return {
@@ -12,6 +14,10 @@ const mapStateToProps = (state) => {
         campsites: state.campsites
     }
 }
+
+const mapDispatchToProps = {
+    deleteFavourite: campsiteId => (deleteFavourite(campsiteId))
+};
 
 class Favourite extends Component {
     static navigationOptions = {
@@ -21,14 +27,22 @@ class Favourite extends Component {
     render() {
         const { navigate } = this.props.navigation;
         const renderCampsites = ({ item }) => {
-
+            const rightButton = [
+                {
+                    text: 'Delete',
+                    type: 'delete',
+                    onPress: () => this.props.deleteFavourite(item.id)
+                }
+            ];
             return (
-                <ListItem
-                    title={item.name}
-                    subtitle={item.description}
-                    leftAvatar={{ source: { uri: baseUrl + item.image } }}
-                    onPress={() => navigate('CampsiteInfo', { campsiteId: item.id })}
-                />
+                <Swipeout right={rightButton} autoClose={true}>
+                    <ListItem
+                        title={item.name}
+                        subtitle={item.description}
+                        leftAvatar={{ source: { uri: baseUrl + item.image } }}
+                        onPress={() => navigate('CampsiteInfo', { campsiteId: item.id })}
+                    />
+                </Swipeout>
             );
 
         }
@@ -44,7 +58,7 @@ class Favourite extends Component {
         }
         return (
             <FlatList
-                data={this.props.campsites.campsites.filter(camp=>this.props.favourite.includes(camp.id))}
+                data={this.props.campsites.campsites.filter(camp => this.props.favourite.includes(camp.id))}
                 renderItem={renderCampsites}
                 keyExtractor={item => item.id.toString()}
             />
@@ -52,4 +66,4 @@ class Favourite extends Component {
     }
 }
 
-export default connect(mapStateToProps)(Favourite);
+export default connect(mapStateToProps, mapDispatchToProps)(Favourite);
