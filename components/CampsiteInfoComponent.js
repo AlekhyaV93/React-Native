@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { postFavourite, postComment } from '../redux/ActionCreators'
 import { favourite } from '../redux/favourite';
+import * as Animatable from 'react-native-animatable';
 
 //mapStateToProps function is called whenever the state changes/updates. It maps redux store state as props to the connected component(here campsiteInfo component)
 const mapStateToProps = (state) => {
@@ -26,34 +27,36 @@ function RenderCampsite(props) {
     const { campsite } = props
     if (campsite) {
         return (
-            <Card
-                featuredTitle={campsite.name}
-                image={{ uri: baseUrl + campsite.image }}>
-                <Text style={{ margin: 10 }}>
-                    {campsite.description}
-                </Text>
-                <View style={styles.cardRow}>
-                    <Icon
-                        type="font-awesome"
-                        name={props.favourite ? 'heart' : 'heart-o'}
-                        raised
-                        reverse
-                        color='#f50'
-                        onPress={() => props.favourite ?
-                            console.log('Already marked favourite') : props.onMarkFavourite()}
-                    />
-                    <Icon
-                        type="font-awesome"
-                        name='pencil'
-                        raised
-                        reverse
-                        color="#5637DD"
-                        onPress={() => props.onShowModal()}
-                        style={styles.cardItem}
-                    />
-                </View>
+            <Animatable.View animation="fadeInDown" delay={1000} duration={2000}>
+                <Card
+                    featuredTitle={campsite.name}
+                    image={{ uri: baseUrl + campsite.image }}>
+                    <Text style={{ margin: 10 }}>
+                        {campsite.description}
+                    </Text>
+                    <View style={styles.cardRow}>
+                        <Icon
+                            type="font-awesome"
+                            name={props.favourite ? 'heart' : 'heart-o'}
+                            raised
+                            reverse
+                            color='#f50'
+                            onPress={() => props.favourite ?
+                                console.log('Already marked favourite') : props.onMarkFavourite()}
+                        />
+                        <Icon
+                            type="font-awesome"
+                            name='pencil'
+                            raised
+                            reverse
+                            color="#5637DD"
+                            onPress={() => props.onShowModal()}
+                            style={styles.cardItem}
+                        />
+                    </View>
 
-            </Card>
+                </Card>
+            </Animatable.View>
         );
     }
     return <View />;
@@ -66,22 +69,24 @@ function RenderComments({ comments }) {
         return (
             <View style={{ margin: 10 }}>
                 <Text style={{ fontSize: 14 }}>{item.text}</Text>
-                <Rating 
-                startingValue={item.rating}
-                readonly
-                imageSize={10}
-                style={{alignItems:'flex-start', paddingVertical:'5%'}}
+                <Rating
+                    startingValue={item.rating}
+                    readonly
+                    imageSize={10}
+                    style={{ alignItems: 'flex-start', paddingVertical: '5%' }}
                 />
                 <Text style={{ fontSize: 12 }}>{`---${item.author},${item.date}`}</Text>
             </View>
         )
     }
     return (
-        <Card title="Comments">
-            <FlatList data={comments}
-                renderItem={renderCommentItem}
-                keyExtractor={item => item.id.toString()} />
-        </Card>
+        <Animatable.View animation="fadeInUp" delay={1000} duration={2000}>
+            <Card title="Comments">
+                <FlatList data={comments}
+                    renderItem={renderCommentItem}
+                    keyExtractor={item => item.id.toString()} />
+            </Card>
+        </Animatable.View>
     )
 }
 
@@ -121,7 +126,7 @@ class CampsiteInfo extends Component {
 
     //event handler thats called when submit a new comment from the modal, it takes campsiteId, rating, author, text as input and calls postComment fn.
     handleComment = (campsiteId, rating, author, text) => {
-        this.props.postComment(campsiteId, rating, author, text);   
+        this.props.postComment(campsiteId, rating, author, text);
     }
 
     //function to reset state property values
@@ -173,7 +178,7 @@ class CampsiteInfo extends Component {
                                 onPress={() => {
                                     this.toggleModal();
                                     this.resetForm();
-                                    this.handleComment(campsiteId,this.state.rating,this.state.author,this.state.comment);
+                                    this.handleComment(campsiteId, this.state.rating, this.state.author, this.state.comment);
                                 }}
                             />
                         </View>

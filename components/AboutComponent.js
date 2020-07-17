@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl'
 import { partners } from '../redux/partners';
 import Loading from './LoadingComponent';
+import * as Animatable from 'react-native-animatable';
 
 const mapStateToProps = (state) => {
     return {
@@ -54,16 +55,20 @@ class About extends Component {
         }
         if (this.props.partners.errMess) {
             return (
+
                 <ScrollView>
-                    <Mission />
-                    <Card title="Community Partners">
-                        <Text>{this.props.partners.errMess}</Text>
-                    </Card>
+                    <Animatable.View animation="fadeInDown" delay={1000} duration={2000}>
+                        <Mission />
+                        <Card title="Community Partners">
+                            <Text>{this.props.partners.errMess}</Text>
+                        </Card>
+                    </Animatable.View>
                 </ScrollView>
             )
         }
         return (
             <ScrollView>
+                <Animatable.View animation="fadeInDown" delay={1000} duration={2000}>
                 <Mission />
                 <Card title="Community Partners">
                     <FlatList data={this.props.partners.partners}
@@ -71,6 +76,7 @@ class About extends Component {
                         renderItem={renderPartner}
                     />
                 </Card>
+                </Animatable.View>
             </ScrollView>
         )
     }

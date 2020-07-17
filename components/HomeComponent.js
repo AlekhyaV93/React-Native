@@ -48,7 +48,7 @@ class Home extends Component {
         }
 
     }
-    animate() {
+    popUpAnimation() {
         Animated.timing(
             this.state.scaleValue,
             {
@@ -58,7 +58,7 @@ class Home extends Component {
         ).start();
     }
     componentDidMount() {
-        this.animate();
+        this.popUpAnimation();
     }
     static navigationOptions = {
         title: 'Home'
