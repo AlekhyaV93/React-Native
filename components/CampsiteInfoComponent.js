@@ -25,13 +25,16 @@ const mapDispatchToProps = {
 //functional component to render selected campsite
 function RenderCampsite(props) {
     const { campsite } = props
+    //creating reference and assigning it to campsite card
     const view = React.createRef();
+    //functions to evaluate the gesture based on gestureState object properties
     const recognizeDrag = ({ dx }) => (dx < -200) ? true : false;
-
+    const recognizeComment = ({ dx }) => (dx > 200) ? true : false;
+    //calling PanResponder Api and calling respective event handling functions
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: () => true,
         onPanResponderGrant: () => {
-            view.current.rubberBand(1000)
+            view.current.rubberBand(2000)
                 .then(endState => console.log(endState.finished ? 'finished' : 'canceled'));
         },
         onPanResponderEnd: (e, gestureState) => {
@@ -53,6 +56,9 @@ function RenderCampsite(props) {
                     ],
                     { cancelable: false }
                 )
+            }
+            else if (recognizeComment(gestureState)) {
+                props.onShowModal();
             }
             return true;
         }

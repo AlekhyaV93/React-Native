@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, Switch, Picker, Button, StyleSheet, Modal } from 'react-native';
+import { Text, View, ScrollView, Switch, Picker, Button, StyleSheet, Modal, Alert } from 'react-native';
 import DatePicker from 'react-native-datepicker';
+import * as Animatable from 'react-native-animatable';
 
+//reservation class component
 class Reservation extends Component {
     constructor(props) {
         super(props);
@@ -9,33 +11,47 @@ class Reservation extends Component {
             campers: 1,
             hikein: false,
             date: '',
-            showModal: false
         }
     }
-    toggleModal() {
-        this.setState({ showModal: !this.state.showModal })
-    }
 
+    //Popping an alert with reserve campsite data on clicking search
     handleSearch() {
         console.log(JSON.stringify(this.state));
-        this.toggleModal();
+        Alert.alert(
+            'Begin Search?',
+            'Number Of Campers: ' + this.state.campers +'\r\n\n' + ' Hike-in? ' + this.state.hikein + '\r\n\n' + 'Date: ' + this.state.date ,
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                    onPress: () => { this.resetForm() }
+                },
+                {
+                    text: 'OK',
+                    onPress: () => { this.resetForm() }
+                }
+            ],
+            {cancelable:false}
+
+        )
     }
 
+    //resetting state to its default values
     resetForm() {
         this.setState({
             campers: 1,
             hikein: false,
             date: '',
-            showModal: false
         })
     }
+    //including reserve campsite to stacknavigator
     static navigationOptions = {
         title: 'Reserve Campsite'
     }
 
     render() {
         return (
-            <ScrollView>
+            <Animatable.View animation='zoomIn' duration={2000} delay={1000}>
                 <View style={styles.formRow}>
                     <Text style={styles.formLabel}>Number of Campers</Text>
                     <Picker selectedValue={this.state.campers.toString()}
@@ -87,32 +103,12 @@ class Reservation extends Component {
                         color='#5637DD'
                         accessibilityLabel='Tap me to search for available campsites to reserve' />
                 </View>
-
-                <Modal animationType={'slide'}
-                    transparent={false}
-                    visible={this.state.showModal}
-                    onRequestClose={() => this.toggleModal()} >
-                    <View style={styles.modal}>
-                        <Text style={styles.modalTitle}>Search Campsite Reservations</Text>
-                        <Text style={styles.modalText}>Number Of Campers:{this.state.campers}</Text>
-                        <Text style={styles.modalText}>Hike-in? {this.state.hikein ? 'Yes' : 'No'}</Text>
-                        <Text style={styles.modalText}>Date:{this.state.date}</Text>
-                        <Button
-                            onPress={() => {
-                                this.toggleModal();
-                                this.resetForm();
-                            }}
-                            color='#5637DD'
-                            title='Close'
-                        />
-                    </View>
-                </Modal>
-
-            </ScrollView>
+            </Animatable.View>
         )
     }
 }
 
+//creating some custom styles
 const styles = StyleSheet.create({
     formRow: {
         alignItems: 'center',
@@ -146,4 +142,5 @@ const styles = StyleSheet.create({
     }
 });
 
+//exporting reservartion module as default 
 export default Reservation;

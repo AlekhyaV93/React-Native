@@ -8,11 +8,14 @@ import About from './AboutComponent';
 import Contact from './ContactComponent';
 import Reservation from './ReaservationComponent';
 import Favourite from './FavouriteComponent';
+import Login from './LoginComponent';
 import { Icon } from 'react-native-elements';
 import SafeAreaView from 'react-native-safe-area-view';
 import { connect } from 'react-redux';
-import { fetchCampsites, fetchComments, fetchPromotions,
-    fetchPartners } from '../redux/ActionCreators';
+import {
+    fetchCampsites, fetchComments, fetchPromotions,
+    fetchPartners
+} from '../redux/ActionCreators';
 
 const mapDispatchToProps = {
     fetchCampsites,
@@ -166,16 +169,39 @@ const FavouriteNavigator = createStackNavigator(
     }
 );
 
+const LoginNavigator = createStackNavigator(
+    {
+        Login: { screen: Login }
+    },
+    {
+    navigationOptions: ({ navigation }) => ({
+        headerLeft: <Icon
+            name="sign-in"
+            type="font-awesome"
+            iconStyle={styles.stackIcon}
+            onPress={() => navigation.toggleDrawer()}
+        />,
+        headerStyle: {
+            backgroundColor: '#5637DD'
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            color: '#fff'
+        }
+    })
+}
+)
+
 const CustomDrawerContentComponent = props => (
     <ScrollView>
-        <SafeAreaView 
+        <SafeAreaView
             style={styles.container}
-            forceInset={{top: 'always', horizontal: 'never'}}>
+            forceInset={{ top: 'always', horizontal: 'never' }}>
             <View style={styles.drawerHeader}>
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                     <Image source={require('./images/logo.png')} style={styles.drawerImage} />
                 </View>
-                <View style={{flex: 2}}>
+                <View style={{ flex: 2 }}>
                     <Text style={styles.drawerHeaderText}>NuCamp</Text>
                 </View>
             </View>
@@ -193,6 +219,19 @@ const MainNavigator = createDrawerNavigator(
                 drawerIcon: ({ tintColor }) => (
                     <Icon
                         name='home'
+                        type='font-awesome'
+                        size={24}
+                        color={tintColor}
+                    />
+                )
+            }
+        },
+        Login: {
+            screen: LoginNavigator,
+            navigationOptions: {
+                drawerIcon: ({ tintColor }) => (
+                    <Icon
+                        name='sign-in'
                         type='font-awesome'
                         size={24}
                         color={tintColor}
@@ -270,13 +309,13 @@ const MainNavigator = createDrawerNavigator(
     },
     {
         drawerBackgroundColor: '#CEC8FF',
-        contentComponent : CustomDrawerContentComponent
+        contentComponent: CustomDrawerContentComponent
     }
 )
 //rendering MainNavigator within Main Component
 class Main extends Component {
 
-    componentDidMount(){
+    componentDidMount() {
         this.props.fetchCampsites();
         this.props.fetchComments();
         this.props.fetchPartners();
@@ -323,4 +362,4 @@ const styles = StyleSheet.create({
 });
 
 //exporting Main component as default
-export default  connect(null,mapDispatchToProps)(Main);
+export default connect(null, mapDispatchToProps)(Main);

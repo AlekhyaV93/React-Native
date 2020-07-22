@@ -2,7 +2,7 @@ import React from 'react';
 import Main from './components/MainComponent';
 import { Provider } from 'react-redux';
 import { ConfigureStore } from './redux/configureStore';
-import { persistGate, PersistGate } from 'redux-persist/es/integration/react';
+import { PersistGate } from 'redux-persist/es/integration/react';
 import Loading from './components/LoadingComponent';
 
 //connecting redux store to the root component that renders the main component. This allows all the child components that are routed in main component to utilize the redux store
