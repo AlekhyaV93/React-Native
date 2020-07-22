@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Text, View, ScrollView, Switch, Picker, Button, StyleSheet, Modal, Alert } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import * as Animatable from 'react-native-animatable';
-
+import * as Permissions from 'expo-permissions';
+import { Notifications } from 'expo';
 //reservation class component
 class Reservation extends Component {
     constructor(props) {
@@ -19,7 +20,7 @@ class Reservation extends Component {
         console.log(JSON.stringify(this.state));
         Alert.alert(
             'Begin Search?',
-            'Number Of Campers: ' + this.state.campers +'\r\n\n' + ' Hike-in? ' + this.state.hikein + '\r\n\n' + 'Date: ' + this.state.date ,
+            'Number Of Campers: ' + this.state.campers + '\r\n\n' + ' Hike-in? ' + this.state.hikein + '\r\n\n' + 'Date: ' + this.state.date,
             [
                 {
                     text: 'Cancel',
@@ -28,10 +29,13 @@ class Reservation extends Component {
                 },
                 {
                     text: 'OK',
-                    onPress: () => { this.resetForm() }
+                    onPress: () => {
+                        this.sendNotification(this.state.date)
+                        this.resetForm()
+                    }
                 }
             ],
-            {cancelable:false}
+            { cancelable: false }
 
         )
     }
@@ -44,6 +48,30 @@ class Reservation extends Component {
             date: '',
         })
     }
+
+    //An Asynchronous function that itself makes few async calls and returns a constant called permissions
+    async obtainNotificationPermissions() {
+        const permissions = await Permissions.getAsync(Permissions.USER_FACING_NOTIFICATIONS);
+        if (permissions.status !== 'granted') {
+            const permissions = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS);
+            if (permissions.status !== 'granted') {
+                Alert.alert('Permissions not granted');
+                return permissions;
+            }
+        }
+        return permissions;
+    }
+
+    async sendNotification(date) {
+        const permissions = await this.obtainNotificationPermissions();
+        if (permissions.status === 'granted') {
+            Notifications.presentLocalNotificationAsync({
+                title: 'Your Campsite Reservation Search',
+                body: 'Search for ' + date + ' requested'
+            })
+        }
+    }
+
     //including reserve campsite to stacknavigator
     static navigationOptions = {
         title: 'Reserve Campsite'
