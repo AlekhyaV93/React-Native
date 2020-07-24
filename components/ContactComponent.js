@@ -57,4 +57,4 @@ class Contact extends Component {
     }
 }
 //exporting Contact component as default
-export default Contact
+export default Contact 
