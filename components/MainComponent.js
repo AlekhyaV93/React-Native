@@ -175,22 +175,22 @@ const LoginNavigator = createStackNavigator(
         Login: { screen: Login }
     },
     {
-    navigationOptions: ({ navigation }) => ({
-        headerLeft: <Icon
-            name="sign-in"
-            type="font-awesome"
-            iconStyle={styles.stackIcon}
-            onPress={() => navigation.toggleDrawer()}
-        />,
-        headerStyle: {
-            backgroundColor: '#5637DD'
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-            color: '#fff'
-        }
-    })
-}
+        navigationOptions: ({ navigation }) => ({
+            headerLeft: <Icon
+                name="sign-in"
+                type="font-awesome"
+                iconStyle={styles.stackIcon}
+                onPress={() => navigation.toggleDrawer()}
+            />,
+            headerStyle: {
+                backgroundColor: '#5637DD'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                color: '#fff'
+            }
+        })
+    }
 )
 
 const CustomDrawerContentComponent = props => (
@@ -322,17 +322,24 @@ class Main extends Component {
         this.props.fetchPartners();
         this.props.fetchPromotions();
 
-        NetInfo.fetch().then(connectionInfo => {
-            (Platform.OS==='ios')?Alert.alert('Initial Connectivity Type: ',connectionInfo.type):ToastAndroid.show('Initial Network Connectivity type '+connectionInfo.type,ToastAndroid.LONG)
-        })
+        this.showNetInfo();
 
         this.unsubscribeNetInfo = NetInfo.addEventListener(connectionInfo => {
             this.handleConnectivityChange(connectionInfo);
         });
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.unsubscribeNetInfo();
+    }
+
+    showNetInfo = async () => {
+        const connectionInfo = await NetInfo.fetch();
+        //console.log("ConnectionInfo", connectionInfo);
+        (Platform.OS === 'ios') ?
+            Alert.alert('Initial Connectivity Type: ', connectionInfo.type) :
+            ToastAndroid.show('Initial Network Connectivity type ' + connectionInfo.type, ToastAndroid.LONG)
+
     }
 
     handleConnectivityChange = connectionInfo => {
@@ -354,6 +361,7 @@ class Main extends Component {
         (Platform.OS === 'ios') ? Alert.alert('Connection change:', connectionMsg)
             : ToastAndroid.show(connectionMsg, ToastAndroid.LONG);
     }
+
 
     render() {
         return (
